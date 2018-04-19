@@ -24,6 +24,25 @@ describe('TicTacToeService', () => {
   }));
 
   describe('getBoard', () => {
+    const boards: Object[] = [
+      {
+        id: '111',
+        board: ['x', 'y', 'x', 'y', 'x', 'y', 'x', 'y', 'x'],
+        lastMoveOn: '2017-04-19T20:50:27.9985325+00:00',
+        firstPlayer: 'x',
+        secondPlayer: 'y',
+        winner: 'x'
+      },
+      {
+        id: '222',
+        board: ['y', 'x', 'y', 'x', 'y', 'x', 'y', 'x', 'y'],
+        lastMoveOn: '2018-04-19T20:50:27.9985325+00:00',
+        firstPlayer: 'y',
+        secondPlayer: 'x',
+        winner: 'y'
+      }
+    ];
+
     it('should retrieve board from api', async(inject([
       TicTacToeService,
       HttpClient,
@@ -33,16 +52,17 @@ describe('TicTacToeService', () => {
       http: HttpClient,
       backend: HttpTestingController
     ) => {
-        service.getBoard('321').subscribe(result => {
-          expect(result).toBeNull();
+        boards.forEach(board => {
+          service.getBoard('321').subscribe(result => {
+            expect(result.toString).toEqual(board.toString);
+          });
+
+          backend.expectOne((req: HttpRequest<any>) => {
+            return req.method === 'POST'
+              && req.url === environment.backendUrl + '/api/games'
+              && req.body.id === '321';
+          }).flush(board, { status: 200, statusText: 'Ok' });
         });
-
-        backend.expectOne((req: HttpRequest<any>) => {
-          return req.method === 'POST'
-            && req.url === environment.backendUrl + '/api/games'
-            && req.body.id === '321';
-        }).flush(null, { status: 200, statusText: 'Ok' });
-
       })));
   });
 });
