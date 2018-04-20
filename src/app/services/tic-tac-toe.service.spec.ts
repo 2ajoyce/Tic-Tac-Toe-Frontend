@@ -64,5 +64,46 @@ describe('TicTacToeService', () => {
           }).flush(board, { status: 200, statusText: 'Ok' });
         });
       })));
+
+    it('should create and retrieve a board from api', async(inject([
+      TicTacToeService,
+      HttpClient,
+      HttpTestingController
+    ], (
+      service: TicTacToeService,
+      http: HttpClient,
+      backend: HttpTestingController
+    ) => {
+        boards.forEach(board => {
+          service.createBoard('x').subscribe(result => {
+            expect(result.toString).toEqual(board.toString);
+          });
+
+          backend.expectOne((req: HttpRequest<any>) => {
+            return req.method === 'POST'
+              && req.url === environment.backendUrl + '/api/games/start'
+              && req.body.player === 'x';
+          }).flush(board, { status: 200, statusText: 'Ok' });
+        });
+      })));
+
+    it('should retrieve the number of current boards', async(inject([
+      TicTacToeService,
+      HttpClient,
+      HttpTestingController
+    ], (
+      service: TicTacToeService,
+      http: HttpClient,
+      backend: HttpTestingController
+    ) => {
+        service.getAllBoards().subscribe(result => {
+          expect(result).toEqual(4);
+        });
+
+        backend.expectOne((req: HttpRequest<any>) => {
+          return req.method === 'GET'
+            && req.url === environment.backendUrl + '/api/games';
+        }).flush(4, { status: 200, statusText: 'Ok' });
+      })));
   });
 });

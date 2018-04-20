@@ -30,4 +30,33 @@ export class TicTacToeService {
     return result;
   }
 
+  createBoard(player: string): Subject<Board> {
+    const response: Observable<any> = this.httpClient.post(environment.backendUrl + '/api/games/start', { player: player });
+    const result: Subject<Board> = new Subject;
+
+    response.subscribe(r => {
+      result.next(new Board(
+        r.id,
+        r.board,
+        moment(r.lastMoveOn),
+        r.firstPlayer,
+        r.secondPlayer,
+        r.winner
+      ));
+    });
+
+    return result;
+  }
+
+  getAllBoards(): Subject<number> {
+    const response: Observable<any> = this.httpClient.get(environment.backendUrl + '/api/games');
+    const result: Subject<number> = new Subject;
+
+    response.subscribe(r => {
+      result.next(r);
+    });
+
+    return result;
+  }
+
 }
