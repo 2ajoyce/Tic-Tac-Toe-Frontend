@@ -23,7 +23,6 @@ describe('TicTacToeService', () => {
     expect(service).toBeTruthy();
   }));
 
-  describe('getBoard', () => {
     const boards: Object[] = [
       {
         id: '111',
@@ -43,7 +42,7 @@ describe('TicTacToeService', () => {
       }
     ];
 
-    it('should retrieve board from api', async(inject([
+    it('getBoard', async(inject([
       TicTacToeService,
       HttpClient,
       HttpTestingController
@@ -65,7 +64,7 @@ describe('TicTacToeService', () => {
         });
       })));
 
-    it('should create and retrieve a board from api', async(inject([
+    it('createBoard', async(inject([
       TicTacToeService,
       HttpClient,
       HttpTestingController
@@ -87,7 +86,7 @@ describe('TicTacToeService', () => {
         });
       })));
 
-    it('should retrieve the number of current boards', async(inject([
+    it('getAllBoards', async(inject([
       TicTacToeService,
       HttpClient,
       HttpTestingController
@@ -106,4 +105,3 @@ describe('TicTacToeService', () => {
         }).flush(4, { status: 200, statusText: 'Ok' });
       })));
   });
-});
