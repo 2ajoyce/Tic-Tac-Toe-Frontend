@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { setDefaultService } from 'selenium-webdriver/edge';
 
-export class Board {
+export class Game {
     id: string;
     board: string[];
     lastMoveOn: moment.Moment;
