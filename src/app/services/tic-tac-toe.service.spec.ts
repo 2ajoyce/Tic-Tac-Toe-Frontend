@@ -7,6 +7,7 @@ import { Mock } from 'protractor/built/driverProviders';
 import { environment } from '../../environments/environment';
 import { equal } from 'assert';
 import { Game } from '../models/game';
+import { testApiGames } from './testingService.spec';
 
 describe('TicTacToeService', () => {
   beforeEach(() => {
@@ -23,25 +24,6 @@ describe('TicTacToeService', () => {
     expect(service).toBeTruthy();
   }));
 
-  const games: Object[] = [
-    {
-      id: '111',
-      board: ['x', 'y', 'x', 'y', 'x', 'y', 'x', 'y', 'x'],
-      lastMoveOn: '2017-04-19T20:50:27.9985325+00:00',
-      firstPlayer: 'x',
-      secondPlayer: 'y',
-      winner: 'x'
-    },
-    {
-      id: '222',
-      board: ['y', 'x', 'y', 'x', 'y', 'x', 'y', 'x', 'y'],
-      lastMoveOn: '2018-04-19T20:50:27.9985325+00:00',
-      firstPlayer: 'y',
-      secondPlayer: 'x',
-      winner: 'y'
-    }
-  ];
-
   it('getGame', async(inject([
     TicTacToeService,
     HttpClient,
@@ -51,7 +33,7 @@ describe('TicTacToeService', () => {
     http: HttpClient,
     backend: HttpTestingController
   ) => {
-      games.forEach(game => {
+      testApiGames.forEach(game => {
         service.getGame('321').subscribe(result => {
           expect(result.toString).toEqual(game.toString);
         });
@@ -73,7 +55,7 @@ describe('TicTacToeService', () => {
     http: HttpClient,
     backend: HttpTestingController
   ) => {
-      games.forEach(game => {
+      testApiGames.forEach(game => {
         service.createGame('x').subscribe(result => {
           expect(result.toString).toEqual(game.toString);
         });
@@ -115,14 +97,14 @@ describe('TicTacToeService', () => {
     backend: HttpTestingController
   ) => {
       service.joinGame('x').subscribe(result => {
-        expect(result.toString).toEqual(games[0].toString);
+        expect(result.toString).toEqual(testApiGames[0].toString);
       });
 
       backend.expectOne((req: HttpRequest<any>) => {
         return req.method === 'POST'
           && req.url === environment.backendUrl + '/api/games/join'
           && req.body.player === 'x';
-      }).flush(games[0], { status: 200, statusText: 'Ok' });
+      }).flush(testApiGames[0], { status: 200, statusText: 'Ok' });
     })));
 
   it('joinGame with player and id', async(inject([
@@ -135,7 +117,7 @@ describe('TicTacToeService', () => {
     backend: HttpTestingController
   ) => {
       service.joinGame('x', '111fgh').subscribe(result => {
-        expect(result.toString).toEqual(games[0].toString);
+        expect(result.toString).toEqual(testApiGames[0].toString);
       });
 
       backend.expectOne((req: HttpRequest<any>) => {
@@ -143,6 +125,6 @@ describe('TicTacToeService', () => {
           && req.url === environment.backendUrl + '/api/games/join'
           && req.body.player === 'x'
           && req.body.gameId === '111fgh';
-      }).flush(games[0], { status: 200, statusText: 'Ok' });
+      }).flush(testApiGames[0], { status: 200, statusText: 'Ok' });
     })));
 });
