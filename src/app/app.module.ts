@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { BoardComponent } from './components/board/board.component';
 import { TicTacToeService } from './services/tic-tac-toe.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -16,10 +16,10 @@ import { HttpClient } from '@angular/common/http';
     BoardComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [
-    HttpClient,
     TicTacToeService
   ],
   bootstrap: [AppComponent]
